@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/boram/Workspace/icmpredirect/build",
+  "command": "/usr/bin/cc    -g   -o CMakeFiles/icmp.dir/icmpredirect.c.o   -c /home/boram/Workspace/icmpredirect/icmpredirect.c",
+  "file": "/home/boram/Workspace/icmpredirect/icmpredirect.c"
+}
+]

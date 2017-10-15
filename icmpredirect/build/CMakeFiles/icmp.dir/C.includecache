@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/boram/Workspace/icmpredirect/icmpredirect.c
+stdio.h
+-
+sys/socket.h
+-
+sys/types.h
+-
+netinet/ip_icmp.h
+-
+stdlib.h
+-
+string.h
+-
+arpa/inet.h
+-
+netinet/if_ether.h
+-
+
