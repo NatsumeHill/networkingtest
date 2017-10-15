@@ -57,32 +57,11 @@ int main(int argc, char *argv[])
     /* 数据包源地址缓冲区 */
     struct sockaddr_in from;
     int from_len = sizeof(from);
-    memset(&from, 0 ,from_len);
+    memset(&from, 0, from_len);
     /* 数据包IP协议头 */
     struct ip *piph = NULL;
     struct icmp *picmp = NULL;
     int i = 0;
-    // int count = 100;
-    // while (1)
-    // {
-    //     // count--;
-    //     int n = recvfrom(socketfd_recv, recv_buffer, RECV_BUFFER_SIZE, 0, (struct sockaddr *)&from, &from_len);
-    //     if (n < 0)
-    //     {
-    //         perror("receive error!\n");
-    //         exit(1);
-    //     }
-    //     i++;
-    //     piph = (struct ip *)recv_buffer;
-    //     int iph_len = (piph->ip_hl) * 4;
-    //     printf("No. %d %s", i, inet_ntoa(piph->ip_src));
-    //     printf(" -> %s ", inet_ntoa(piph->ip_dst));
-    //     picmp = (struct icmp *)(recv_buffer + iph_len);
-    //     printf("ICMP type:%d\n", picmp->icmp_type);
-    //     if (picmp->icmp_type == ICMP_ECHO)
-    //         icmp_redirect(&new_gw, &src_gw, recv_buffer, socketfd_send, from);
-    // }
-    // printf("Success!");
     while (1)
     {
         /* 接受发送到本机的以太网帧 */
@@ -148,13 +127,7 @@ void icmp_redirect(struct sockaddr_in *new_gw,
     psend_icmph->icmp_seq = 3;
 
     psend_icmph->icmp_hun.ih_gwaddr = new_gw->sin_addr;
-    memcpy(psend_packet + IP_HL + ICMP_HL, src_ippacket+SIZE_ETHERNET, src_iphl + 8);
-
-    // int i = 0;
-    // for (i = 0; i < src_iphl; i++)
-    //     *(psend_packet + IP_HL + ICMP_HL + i) = src_ippacket[SIZE_ETHERNET + i];
-    // for (i = 0; i < 8; i++)
-    //     *(psend_packet + IP_HL + ICMP_HL + src_iphl + i) = src_ippacket[SIZE_ETHERNET + src_iphl + i];
+    memcpy(psend_packet + IP_HL + ICMP_HL, src_ippacket + SIZE_ETHERNET, src_iphl + 8);
     psend_icmph->icmp_cksum = in_cksum((unsigned short *)(psend_packet + IP_HL), ICMP_HL + send_icmp_data_len);
     sendto(socketfd_send, psend_packet, send_packet_len, 0, (struct sockaddr *)&target, sizeof(target));
 }
