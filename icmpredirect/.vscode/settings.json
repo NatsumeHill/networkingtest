@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "socket.h": "c",
-        "types.h": "c",
-        "stdlib.h": "c",
-        "ip_icmp.h": "c",
-        "ip.h": "c"
-    }
-}
